@@ -1,17 +1,22 @@
 import React, { useState } from "react";
-import CustomModal from "./ModalComponent";
 import ModalComponent from "./ModalComponent";
 
 const Problem2 = () => {
-  // CONTACT_DATA STATE
+  // ====================||contact data||=================
   const [allContactData, setAllContactData] = useState([]);
 
-  // FETCH DATA FUNCTION
-  const handleFetchData = async (url) => {
-    const res = await fetch(url);
-    const { results } = await res.json();
-    setAllContactData(results);
+  // =====================||fetch data function||===============
+  const fetchData = async (url) => {
+    try {
+      const res = await fetch(url);
+      const { results } = await res.json();
+      setAllContactData(results);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+  //   ==================|| onchange value handler ||=================
+  const handleModalButtonClick = (url) => () => fetchData(url);
 
   return (
     <div className="container">
@@ -24,11 +29,9 @@ const Problem2 = () => {
             type="button"
             data-bs-toggle="modal"
             data-bs-target="#all-contact"
-            onClick={() =>
-              handleFetchData(
-                "https://contact.mediusware.com/api/contacts/?format=json"
-              )
-            }
+            onClick={handleModalButtonClick(
+              "https://contact.mediusware.com/api/contacts/?format=json"
+            )}
           >
             All Contacts
           </button>
@@ -37,11 +40,9 @@ const Problem2 = () => {
             type="button"
             data-bs-toggle="modal"
             data-bs-target="#us-contact"
-            onClick={() =>
-              handleFetchData(
-                "https://contact.mediusware.com/api/country-contacts/United%20States/?format=json"
-              )
-            }
+            onClick={handleModalButtonClick(
+              "https://contact.mediusware.com/api/country-contacts/United%20States/?format=json"
+            )}
           >
             US Contacts
           </button>
@@ -51,19 +52,22 @@ const Problem2 = () => {
         <ModalComponent
           headerButton={
             <>
-              <button type="button" class="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                style={{ color: "#46139f" }}
+              >
                 All Contact
               </button>
               <button
                 type="button"
-                class="btn btn-primary"
+                className="btn btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#us-contact"
-                onClick={() =>
-                  handleFetchData(
-                    "https://contact.mediusware.com/api/country-contacts/United%20States/?format=json"
-                  )
-                }
+                style={{ color: "#ff7f50" }}
+                onClick={handleModalButtonClick(
+                  "https://contact.mediusware.com/api/country-contacts/United%20States/?format=json"
+                )}
               >
                 Us Contact
               </button>
@@ -71,14 +75,8 @@ const Problem2 = () => {
           }
           modalId="all-contact"
           modalTitle="All Contacts"
-        >
-          {allContactData?.map((contact) => (
-            <div key={contact.id}>
-              <h5>Phone: {contact.phone}</h5>
-              <p>Country: {contact.country.name}</p>
-            </div>
-          ))}
-        </ModalComponent>
+          allContactData={allContactData}
+        />
 
         {/* US CONTACT MODAL */}
         <ModalComponent
@@ -86,32 +84,33 @@ const Problem2 = () => {
             <>
               <button
                 type="button"
-                class="btn btn-primary"
+                className="btn btn-primary "
                 data-bs-toggle="modal"
                 data-bs-target="#all-contact"
-                onClick={() =>
-                  handleFetchData(
-                    "https://contact.mediusware.com/api/contacts/?format=json"
-                  )
-                }
+                onClick={handleModalButtonClick(
+                  "https://contact.mediusware.com/api/contacts/?format=json"
+                )}
+                style={{
+                  border: "#46139f",
+                  color: "#46139f",
+                }}
               >
                 All Contact
               </button>
-              <button type="button" class="btn btn-primary">
+
+              <button
+                style={{ color: "#ff7f50" }}
+                type="button"
+                className="btn btn-primary"
+              >
                 Us Contact
               </button>
             </>
           }
           modalId="us-contact"
           modalTitle="US Contacts"
-        >
-          {allContactData?.map((contact) => (
-            <div key={contact.id}>
-              <h5>Phone: {contact.phone}</h5>
-              <p>Country: {contact.country.name}</p>
-            </div>
-          ))}
-        </ModalComponent>
+          allContactData={allContactData}
+        />
       </div>
     </div>
   );
