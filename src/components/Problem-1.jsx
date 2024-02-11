@@ -21,6 +21,11 @@ const Problem1 = () => {
   //   ===========>||form submit handler  ||===============
   const handleSubmitData = (e) => {
     e.preventDefault();
+    if (!task.model.name.length) {
+      alert("plz enter fill up the field ");
+
+      return;
+    }
     setTask((prev) => ({
       ...prev,
       lists: [...prev.lists, prev.model],
